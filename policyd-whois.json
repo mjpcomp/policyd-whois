@@ -1,6 +1,6 @@
 {
   "debugLevel": 1,
-  "Min_Registered_Age": "60d",
+  "Min_Registered_Age": "60",
   "Registrar_Blacklist": [],
   "Organization_Blacklist": [],
   "Nameserver_Blacklist": [],
