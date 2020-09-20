@@ -13,7 +13,7 @@ A few notes:
 How to implement:
 ===
 Place policyd-whois to /usr/libexec/postfix/policyd-whois and `chmod +x` the file.
-Create the directory /etc/python-policyd-whois, place the policyd-whois.json there.
+Place the policyd-whois.json in the /etc/postfix folder.
 Put this in your /etc/postfix/master.cf:  
 ~~~
 policy-whois  unix  -       n       n       -       -       spawn
