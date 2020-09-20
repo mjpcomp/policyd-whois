@@ -20,7 +20,7 @@
    limitations under the License.
 '''
 
-__version__ = "0.0.1: August 23, 2019"
+__version__ = "0.0.2: September 20, 2020"
 
 testing = True
 
@@ -57,7 +57,7 @@ def _whoischeck(data, configData):
     if debug > 4: syslog.syslog('Config: %s' % configData)
     if debug > 4: syslog.syslog('Request: %s ' % data)
     todaysdate = datetime.datetime.now()
-    olderthan = configData['Min_Registered_Age']
+    olderthan = int(configData['Min_Registered_Age'])
     sender_domain = data['sender'].split('@')[1]
     try:
         # First we check the sending domain's DNS servers, as this can be done through DNS.
