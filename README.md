@@ -4,7 +4,7 @@ policyd-whois
 This is a small and simple policy server for postfix which checks the sending domain's authoritative nameserver against a local blacklist and furthermore tries to retrieve whois information for that sending domain.
 
 Additional work by MJP Technologies:
-Update the daemon to check for domain creation date, and if it falls under a user specified time constraint, an action can be taken (e.g. reject)
+* Update the daemon to check for domain creation date, and if it falls under a user specified time constraint, an action can be taken (e.g. reject)
 
 If a whois lookup can be made for that domain, its organization and even the registrar can be blacklisted, if these are accessible through whois.  
 
