@@ -32,13 +32,15 @@ import socket
 import whois
 import json
 import dns.resolver
+import datetime
+from datetime import timedelta
 
 syslog.openlog(os.path.basename(sys.argv[0]), syslog.LOG_PID, syslog.LOG_MAIL)
 
 ###################################################
 #  load config file  {{{1
 #  Default location:
-configFile = '/etc/python-policyd-whois/policyd-whois.json'
+configFile = '/etc/postfix/policyd-whois.json'
 if len(sys.argv) > 1:
     if sys.argv[1] in ( '-?', '--help', '-h' ):
         print('usage: policyd-whois [<configfilename>]')
@@ -54,6 +56,8 @@ def _whoischeck(data, configData):
     debug = int(configData['debugLevel'])
     if debug > 4: syslog.syslog('Config: %s' % configData)
     if debug > 4: syslog.syslog('Request: %s ' % data)
+    todaysdate = datetime.datetime.now()
+    olderthan = configData['Min_Registered_Age']
     sender_domain = data['sender'].split('@')[1]
     try:
         # First we check the sending domain's DNS servers, as this can be done through DNS.
@@ -78,7 +82,19 @@ def _whoischeck(data, configData):
         if debug > 3: syslog.syslog('Sending domain whois: %s' % sender_domain_whois)
         sender_domain_registrar = ''
         sender_domain_org = ''
-    	if 'registrar' in sender_domain_whois:
+        sender_domain_creationdate = ''
+        if 'creation_date' in sender_domain_whois:
+            if type(sender_domain_whois.creation_date) is list:
+               sender_domain_creationdate = (sender_domain_whois.creation_date[0])
+            else:
+               sender_domain_creationdate = sender_domain_whois.creation_date
+            domain_age = (todaysdate - sender_domain_creationdate).days
+            if (todaysdate - sender_domain_creationdate).days < olderthan:
+               syslog.syslog('Domain %s age of %s day(s) is younger than minimum age in configData' % (sender_domain, domain_age))
+               return('result_only', 'dunno', )
+            else:
+               syslog.syslog('Domain is %s days old' % domain_age)
+        if 'registrar' in sender_domain_whois:
             sender_domain_registrar = sender_domain_whois['registrar']
             if debug > 3: syslog.syslog('Whois returned registrar %s' % (sender_domain_registrar))
             if sender_domain_registrar in configData['Registrar_Blacklist']:
