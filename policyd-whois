@@ -90,7 +90,7 @@ def _whoischeck(data, configData):
             else:
                sender_domain_creationdate = sender_domain_whois.creation_date
             domain_age = (todaysdate - sender_domain_creationdate).days
-            if (todaysdate - sender_domain_creationdate).days < olderthan:
+            if domain_age < olderthan:
                syslog.syslog('Domain %s age of %s day(s) is younger than minimum age in configData' % (sender_domain, domain_age))
                return('result_only', 'dunno', )
             else:
